@@ -1,0 +1,146 @@
+ROOM I, SCENE I
+
+You find yourself surrounded by darkness. You feel a strong wind and tight shoes around your feet. There is a CANDLE and a SCROLL in front of you.
+
+Possible commands are INVENTORY, USE, READ.
+
+$ READ SCROLL
+
+It is too dark to read
+
+$ USE CANDLE
+
+What to use it with?
+
+$ INVENTORY
+
+In your pocket, you find a box of MATCHES.
+
+$ USE MATCHES CANDLE | USE CANDLE MATCHES
+
+You light a match and light the candle with it
+
+$ READ SCROLL
+
+"You might have lost the way and goal
+The way to know is to see all whole
+
+To grow in meaningful extent
+Read out the spell below's content
+
+WALK through the opening in space
+take your time, it's not a race"
+
+There is a SPELL attached to the scroll.
+
+$ READ SPELL
+
+As you read out the magic spell, a PORTAL made out of energy opens.
+
+$ WALK | WALK PORTAL
+
+You trip. You fall. You realize that you are wearing roller blades. You cannot walk. You can only ROLL.
+
+$ ROLL PORTAL
+
+You roll through the portal.
+
+Or does the portal roll through you? Or is it the room that rolls through the portal? Or does the portal you through the roll on the room... ...
+
+ROOM I, SCENE II
+
+You find yourself surrounded by darkness. You feel a mild breeze. There is a CANDLE and a SCROLL in front of you.
+
+$ USE MATCHES CANDLE | USE CANDLE MATCHES
+
+You light a match and light the candle with it
+
+$ READ SCROLL
+
+"You are a closer match to clarity
+Lack of attention your only enemy
+
+PLAY with the shadow of the light
+Revive this tale when the time is right:
+
+The freeest monarch of the wind pounced,
+at a double-quad-limbed creep,
+whilst your best friend's ancestors sing."
+
+$ PLAY SCROLL
+
+You play with the scroll but it is neither fun nor productive.
+
+$ PLAY CANDLE
+
+You can produce the following shadow puppets: WOLF, ELK, EAGLE, SPIDER, GOOSE
+
+$ [WRONG CHOICE]
+
+The light flickers, the candle nearly extinguishes and then returns to burning normally. THIS WAS THE WRONG CHOICE.
+
+$ [CORRECT CHOICE (order is: EAGLE, SPIDER, WOLF)]
+
+The light burns brighter. THIS WAS THE CORRECT CHOICE.
+
+$ [FINAL CORRECT CHOICE]
+
+As you play out the magic sequence, the room turns light and heat into a PORTAL.
+
+$ ROLL PORTAL
+
+You keep rolling. The portal changes things.
+
+ROOM I, SCENE III
+
+You find yourself surrounded by darkness. You feel no movement of the air. There is a CANDLE and a SCROLL in front of you.
+
+$ USE MATCHES CANDLE | USE CANDLE MATCHES
+
+You light a match and light the candle with it
+
+$ READ SCROLL
+
+"As the mind receives increase
+Thoughts must expand
+
+FALL through the final phase
+Truth is not brought by your own hand"
+
+There is a SPELL attached to the scroll
+
+$ READ SPELL
+
+As you read out the magic spell, a PORTAL made out of energy opens.
+
+$ FALL | FALL PORTAL
+
+You throw yourself at the portal. You fall to the ground.
+Nothing.
+Nothing changed. It is all the same.
+
+$ ROLL | ROLL PORTAL
+
+As you roll through the portal, ...
+Nothing.
+Nothing changed. It is all the same.
+
+$ WALK | WALK PORTAL
+
+You try to walk. You trip. You fall.
+
+You fall through the portal.
+
+You find yourself surrounded by light.
+You have come back.
+And it all comes back to you.
+
+THE END
+
+THANK YOU FOR PLAYING YE UNUM AEDIS SCRIPTUM CASUS
+
+$ [ELSE]
+
+Why would you do that?
+
+

@@ -20,15 +20,13 @@ bool isWhite = false;
 bool thread_running = false;
 bool isLight = false;
 bool portal = false;
+int lvl = 0;
+int delim;
 std::string fontfile = "hachicro.ttf" ;
 std::vector<std::string> history;
 std::vector<std::string>::iterator it = history.begin();
-std::vector<std::string> inventory;
-std::vector<std::string>::iterator inv_it = inventory.begin();
 std::stringstream textstream;
-int lvl = 0;
-int delim;
-std::stringstream outputStream;
+std::stringstream outputstream;
 
 bool clean_insert(std::string in){// Special custom Insert Function to avoid Double Entrys
     if(!(std::find(history.begin(), history.end(), in) != history.end()) && !in.empty()){
@@ -56,23 +54,59 @@ void blinkCursor(){ //Let's the Cusor Blink
     }
 }
 
+void print(std::string printinput){
+    outputstream << printinput;
+}
+
+
+void flush(){
+	outputstream.str(std::string());
+}
+
 void read(std::string obj){
-    std::cout << obj << std::endl;
+    if(isLight){
+        if(obj == "scroll" ){
+            flush();
+            switch(lvl){
+                case 0:print("\"You might have lost the way and goal\nThe way to know is to see all whole\nTo grow in meaningful extent\nRead out the spell below's content\nWALK through the opening in spa\"\n\nThere is a SPELL attached to the scroll.");
+                case 1:print("\"You are a closer match to clarity\nLack of attention your only enemy\n\nPLAY with the shadow of the light\nRevive this tale when the time is right:\n\nThe freeest monarch of the wind pounced,\nat a double-quad-limbed creep,\nwhilst your best friend's ancestors sing.\"");
+                case 2:print("\"As the mind receives increase\nThoughts must expand\n\nFALL through the final phase\nTruth is not brought by your own hand\"\nThere is a SPELL attached to the scroll");
+                case 3:print("");
+            }
+        }
+        else if(obj == "spell"){
+            flush();
+            print("As you read out the magic spell, a PORTAL made out of energy opens.");
+            lvl++;
+            isLight = false;
+            portal = false;
+        }
+        else{
+            flush();
+            std::stringstream teemo;
+            teemo << "Reading " << obj << " doesn't seem to be a good Idea!" << std::endl;
+            print(teemo.str());
+        }
+    }
+    else{
+        flush();
+        print("There is no Light! It's too dark to read.");
+    }
 }
 void light(std::string obj){
-    std::cout << obj << std::endl;
+
 }
 void roll(std::string obj){
-    std::cout << obj << std::endl;
+
 }
 void play(std::string obj){
-    std::cout << obj << std::endl;
+
 }
 void walk(std::string obj){
-    std::cout << obj << std::endl;
+
 }
 void fall(std::string obj){
-    std::cout << obj << std::endl;
+
 }
 
 void switch_context(std::string in){ //Main Function to Play
@@ -104,14 +138,7 @@ void switch_context(std::string in){ //Main Function to Play
         std::cout << "This is not a valid Option!" << std::endl;
     }
 }
-void print(std::string s){
-    outputStream << s;
 
-}
-void flush(){
-	outputStream.str(std::string());
-
-}
 int main(){
     /*---------------------Tips and Tracks-----------------------------------------------------------------\\
     //Use Booleans to mark a pressed key for smooth Movement-Systems or real-time Keyboard-Event
@@ -171,7 +198,8 @@ int main(){
   	            if(event.key.code == (sf::Keyboard::Space)){
                     textstream << " ";
                     cursor.setPosition(cmd_size, pos2.y);
-            	}
+                }
+
                 if(event.key.code == (sf::Keyboard::BackSpace)){
                     std::stringstream newss;
                     newss << textstream.str().substr(0, (textstream.str().length() - 1));
@@ -181,7 +209,7 @@ int main(){
                     cursor.setPosition(cmd_size, pos2.y);
                 }     
 
-                if(event.key.code ==(sf::Keyboard::Return)){
+                if(event.key.code == sf::Keyboard::Return){
 
                     clean_insert(textstream.str());
                     textstream.str(std::string());
@@ -206,11 +234,12 @@ int main(){
                             return 0;
                         }
                         else{
-                        switch_context((*(it-1)));
+                            switch_context((*(it-1)));
                         }
                     }
                 }
-                if(event.key.code == (sf::Keyboard::Up)){
+
+                if(event.key.code == sf::Keyboard::Up){
                     if(!(history.empty()) && it != history.begin()){
                         if(clean_insert(textstream.str())){
                             it = it - 2;
@@ -218,28 +247,28 @@ int main(){
                         else{
                             it--;
                         }
-                        textstream.str(std::string());
-                        textstream.str(*it);
                     }
-                    cursor.setPosition(cmd_size, pos2.y);
                 }
+
                 if(event.key.code == (sf::Keyboard::Down)){
                     if(!(history.empty()) && it++ != (history.end() - 1)){
                         textstream.str(std::string());
                         textstream.str(*it);
                     }
-                    else if(!(history.empty()) && it == history.end()){
+                    else{
                         it--;
                     }
-                    cursor.setPosition(cmd_size, pos2.y);
+                    textstream.str(std::string());
+                    textstream.str(*it);
                 }
-			}
+                cursor.setPosition(cmd_size, pos2.y);
+            }
         }
         text.setPosition(5 + entry.getGlobalBounds().width, (h - 32));
         window.clear(sf::Color::Black); // clear the window with black color
         text.setString(textstream.str());
         cursor.setPosition(cmd_size, pos2.y);
-	    output.setString(outputStream.str());
+	    output.setString(outputstream.str());
         window.draw(entry);
         window.draw(text);
         window.draw(output);
