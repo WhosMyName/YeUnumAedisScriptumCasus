@@ -13,6 +13,7 @@ sf::RenderWindow window;
 sf::Event event;
 sf::Font font;
 sf::Text text;
+sf::Text entry;
 sf::Text cursor;
 bool isWhite = false;
 bool thread_running = false;
@@ -73,24 +74,28 @@ int main(){
     std::cout << "Could not Load font !" << std::endl;
     }
     else{
-        text.setFont(font);
-        text.setCharacterSize(24); // in pixels, not points!
-        cursor.setFont(font);
-        cursor.setCharacterSize(24); // in pixels, not points!
-        text.setColor(sf::Color::White);
-        cursor.setColor(sf::Color::White);
-        //text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-        //cursor.setStyle(sf::Text::Bold);
         isWhite = true;
         cursor.setString("[]");
-        text.setPosition(0, (h- 32));
-        cursor.setPosition(text.getCharacterSize(), (h - 32));
+        entry.setString(">");
+        text.setFont(font);
+        text.setCharacterSize(24); // in pixels, not points!
+        text.setColor(sf::Color::White);
+        cursor.setFont(font);
+        cursor.setCharacterSize(24); // in pixels, not points!
+        cursor.setColor(sf::Color::White);
+        entry.setFont(font);
+        entry.setCharacterSize(24); // in pixels, not points!
+        entry.setColor(sf::Color::Green);       
+        entry. setPosition(0, (h - 32));
+        text.setPosition(entry.getCharacterSize(), (h - 32));
+        cursor.setPosition(text.getGlobalBounds().width, (h - 32));
     }
     thread_running = true;
     std::thread thread(blinkCursor);// Creates Thread (C++11) and calls treadnochill
     while (window.isOpen()){    // run the program as long as the window is open
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Vector2f pos = text.getPosition();
+        
         sf::Vector2f pos2 = cursor.getPosition();
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
@@ -491,8 +496,10 @@ int main(){
             }
         }
         cursor.setPosition(text.getLocalBounds().width, pos2.y);
+        text.setPosition(entry.getGlobalBounds().width, (h- 32));
         window.clear(sf::Color::Black); // clear the window with black color
         text.setString(textstream.str());
+        window.draw(entry);
         window.draw(text);
         window.draw(cursor);
         window.display();
