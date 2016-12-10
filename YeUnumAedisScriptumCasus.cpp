@@ -18,12 +18,19 @@ sf::Text entry;
 sf::Text cursor;
 bool isWhite = false;
 bool thread_running = false;
+bool isLight = false;
+bool portal = false;
 std::string fontfile = "hachicro.ttf" ;
 std::vector<std::string> history;
 std::vector<std::string>::iterator it = history.begin();
+std::vector<std::string> inventory;
+std::vector<std::string>::iterator inv_it = inventory.begin();
 std::stringstream textstream;
+int lvl = 0;
+int delim;
 std::stringstream outputStream;
-bool clean_insert(std::string in){
+
+bool clean_insert(std::string in){// Special custom Insert Function to avoid Double Entrys
     if(!(std::find(history.begin(), history.end(), in) != history.end()) && !in.empty()){
         history.push_back(in);
         it = history.end();
@@ -34,7 +41,7 @@ bool clean_insert(std::string in){
     }
 }
 
-void blinkCursor(){
+void blinkCursor(){ //Let's the Cusor Blink
     while(thread_running){
         if (isWhite){
             isWhite = false;
@@ -49,16 +56,52 @@ void blinkCursor(){
     }
 }
 
-void switch_context(std::string in){
+void read(std::string obj){
+    std::cout << obj << std::endl;
+}
+void light(std::string obj){
+    std::cout << obj << std::endl;
+}
+void roll(std::string obj){
+    std::cout << obj << std::endl;
+}
+void play(std::string obj){
+    std::cout << obj << std::endl;
+}
+void walk(std::string obj){
+    std::cout << obj << std::endl;
+}
+void fall(std::string obj){
+    std::cout << obj << std::endl;
+}
+
+void switch_context(std::string in){ //Main Function to Play
     std::cout << in << std::endl;
-    if(in == ""){
-
+    delim = in.find(" ");
+    std::cout << delim << std::endl;
+    std::string command = in.substr(0, delim);
+    std::string obj = in.substr(delim + 1, in.length());
+    std::cout << "Object: "<< obj << std::endl;
+    if(command == "read"){
+        read(obj);
     }
-    else if(in == ""){
-
+    else if(command == "roll"){
+        roll(obj);
+    }
+    else if(command == "walk"){
+        walk(obj);
+    }
+    else if(command == "light"){
+        light(obj);
+    }
+    else if(command == "play"){
+        play(obj);
+    }
+    else if(command == "fall"){
+        fall(obj);
     }
     else{
-
+        std::cout << "This is not a valid Option!" << std::endl;
     }
 }
 void print(std::string s){
@@ -76,9 +119,9 @@ int main(){
     //-----------------------------------------------------------------------------------------------------*/
     int w = 1280;
     int h = 720;
-    window.create(sf::VideoMode(w, h, 32), "Enter Title here!");
+    window.create(sf::VideoMode(w, h, 32), "Enter Title here!"); //Creates Window
     window.setFramerateLimit(60);
-    if (!font.loadFromFile(fontfile)){
+    if (!font.loadFromFile(fontfile)){ //Loads Font
     std::cout << "Could not Load font !" << std::endl;
     }
     else{
@@ -95,21 +138,21 @@ int main(){
         entry.setCharacterSize(24); // in pixels, not points!
         entry.setColor(sf::Color::White);       
         entry. setPosition(0, (h - 32));
-        text.setPosition(entry.getCharacterSize(), (h - 32));
-        cursor.setPosition(text.getGlobalBounds().width, (h - 32));
-        
-        output.setFont(font);
+        text.setPosition(entry.getCharacterSize(), (h - 32)); //Initial Text Position
+        cursor.setPosition(text.getGlobalBounds().width, (h - 32));//Initial Cursor Position
+	output.setFont(font);
         output.setCharacterSize(24);
         output.setColor(sf::Color::White);
         output.setPosition(w/3, (h/3));
     }
     thread_running = true;
-    std::thread thread(blinkCursor);// Creates Thread (C++11) and calls treadnochill
+    std::thread thread(blinkCursor);// Creates Thread (C++11) and calls blinkCursor
     while (window.isOpen()){    // run the program as long as the window is open
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Vector2f pos = text.getPosition();
         sf::Vector2f pos2 = cursor.getPosition();
         int cmd_size = (5 + entry.getGlobalBounds().width + text.getLocalBounds().width);
+        
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                 thread_running = false;
@@ -120,13 +163,10 @@ int main(){
             }
             if(event.type == sf::Event::KeyReleased){
 				if(event.key.code >= sf::Keyboard::A && event.key.code<=sf::Keyboard::Z) { 
- 					textstream << (char)(97+event.key.code);
- 					cursor.setPosition(cmd_size, pos2.y);
+ 					textstream << (char)(97 + event.key.code);
     	   		}
     	   		else if(event.key.code >= 26 && event.key.code <= 35){
-    	   			textstream << (char)(48-26+event.key.code);
-    	   		
-    	   		
+    	   			textstream << (char)(48 - 26 + event.key.code);
     	   		}
 			}
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
@@ -142,10 +182,9 @@ int main(){
                     cursor.setPosition(cmd_size, pos2.y);
                 }     
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return)){
-                    //print(textstream.str());
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
                     clean_insert(textstream.str());
                     textstream.str(std::string());
-                    
                     cursor.setPosition(cmd_size, pos2.y);
                     if(!history.empty()){
                         if((*(it-1)) == "exit"){
@@ -186,7 +225,6 @@ int main(){
                 }
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
                     if(!(history.empty()) && it++ != (history.end() - 1)){
-
                         textstream.str(std::string());
                         textstream.str(*it);
                     }
@@ -195,13 +233,12 @@ int main(){
                     }
                     cursor.setPosition(cmd_size, pos2.y);
                 }
-            
         }
-        cursor.setPosition(cmd_size, pos2.y);
-        text.setPosition(5 + entry.getGlobalBounds().width, (h- 32));
+        text.setPosition(5 + entry.getGlobalBounds().width, (h - 32));
         window.clear(sf::Color::Black); // clear the window with black color
         text.setString(textstream.str());
-        output.setString(outputStream.str());
+        cursor.setPosition(cmd_size, pos2.y);
+	    output.setString(outputStream.str());
         window.draw(entry);
         window.draw(text);
         window.draw(output);
