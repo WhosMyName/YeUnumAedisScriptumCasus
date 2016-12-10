@@ -101,7 +101,7 @@ int main(){
         output.setFont(font);
         output.setCharacterSize(24);
         output.setColor(sf::Color::White);
-        output.setPosition(output.getCharacterSize(), (h/2));
+        output.setPosition(w/3, (h/3));
     }
     thread_running = true;
     std::thread thread(blinkCursor);// Creates Thread (C++11) and calls treadnochill
@@ -142,8 +142,10 @@ int main(){
                     cursor.setPosition(cmd_size, pos2.y);
                 }     
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return)){
+                    //print(textstream.str());
                     clean_insert(textstream.str());
                     textstream.str(std::string());
+                    
                     cursor.setPosition(cmd_size, pos2.y);
                     if(!history.empty()){
                         if((*(it-1)) == "exit"){
