@@ -85,7 +85,7 @@ int main(){
         cursor.setColor(sf::Color::White);
         entry.setFont(font);
         entry.setCharacterSize(24); // in pixels, not points!
-        entry.setColor(sf::Color::Green);       
+        entry.setColor(sf::Color::White);       
         entry. setPosition(0, (h - 32));
         text.setPosition(entry.getCharacterSize(), (h - 32));
         cursor.setPosition(text.getGlobalBounds().width, (h - 32));
@@ -95,8 +95,8 @@ int main(){
     while (window.isOpen()){    // run the program as long as the window is open
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Vector2f pos = text.getPosition();
-        
         sf::Vector2f pos2 = cursor.getPosition();
+        int cmd_size = (5 + entry.getGlobalBounds().width + text.getLocalBounds().width);
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                 thread_running = false;
@@ -113,7 +113,7 @@ int main(){
                     else{
                         textstream << "a";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::B)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -122,7 +122,7 @@ int main(){
                     else{
                         textstream << "b";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::C)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -131,7 +131,7 @@ int main(){
                     else{
                         textstream << "c";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -140,7 +140,7 @@ int main(){
                     else{
                         textstream << "d";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::E)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -149,7 +149,7 @@ int main(){
                     else{
                         textstream << "e";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::F)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -158,7 +158,7 @@ int main(){
                     else{
                         textstream << "f";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::G)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -167,7 +167,7 @@ int main(){
                     else{
                         textstream << "g";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::H)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -176,7 +176,7 @@ int main(){
                     else{
                         textstream << "h";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::I)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -185,7 +185,7 @@ int main(){
                     else{
                         textstream << "i";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::J)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -194,7 +194,7 @@ int main(){
                     else{
                         textstream << "j";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::K)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -203,7 +203,7 @@ int main(){
                     else{
                         textstream << "k";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::L)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -212,7 +212,7 @@ int main(){
                     else{
                         textstream << "l";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::M)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -221,7 +221,7 @@ int main(){
                     else{
                         textstream << "m";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::N)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -230,7 +230,7 @@ int main(){
                     else{
                         textstream << "n";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::O)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -239,7 +239,7 @@ int main(){
                     else{
                         textstream << "o";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::P)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -248,7 +248,7 @@ int main(){
                     else{
                         textstream << "p";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -257,7 +257,7 @@ int main(){
                     else{
                         textstream << "q";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::R)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -266,7 +266,7 @@ int main(){
                     else{
                         textstream << "r";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -275,7 +275,7 @@ int main(){
                     else{
                         textstream << "s";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::T)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -284,7 +284,7 @@ int main(){
                     else{
                         textstream << "t";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::U)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -293,7 +293,7 @@ int main(){
                     else{
                         textstream << "u";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::V)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -302,7 +302,7 @@ int main(){
                     else{
                         textstream << "v";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -311,7 +311,7 @@ int main(){
                     else{
                         textstream << "w";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::X)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -320,7 +320,7 @@ int main(){
                     else{
                         textstream << "x";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Y)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -329,7 +329,7 @@ int main(){
                     else{
                         textstream << "y";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -338,7 +338,7 @@ int main(){
                     else{
                         textstream << "z";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -347,7 +347,7 @@ int main(){
                     else{
                         textstream << "0";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -356,7 +356,7 @@ int main(){
                     else{
                         textstream << "1";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -365,7 +365,7 @@ int main(){
                     else{
                         textstream << "2";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -374,7 +374,7 @@ int main(){
                     else{
                         textstream << "3";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -383,7 +383,7 @@ int main(){
                     else{
                         textstream << "4";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -392,7 +392,7 @@ int main(){
                     else{
                         textstream << "5";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num6)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -401,7 +401,7 @@ int main(){
                     else{
                         textstream << "6";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num7)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -410,7 +410,7 @@ int main(){
                     else{
                         textstream << "7";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num8)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -419,7 +419,7 @@ int main(){
                     else{
                         textstream << "8";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     } 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)){
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)){
@@ -428,11 +428,11 @@ int main(){
                     else{
                         textstream << "9";
                     }
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                 }
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
                     textstream << " ";
-                    cursor.setPosition(text.getCharacterSize() + text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                 }
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)){
                     std::stringstream newss;
@@ -440,21 +440,22 @@ int main(){
                     textstream.str(std::string());
                     textstream << newss.str();
                     newss.str(std::string());
-                    cursor.setPosition(text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                 }
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return)){
                     clean_insert(textstream.str());
                     textstream.str(std::string());
-                    cursor.setPosition(text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                     if(!history.empty()){
                         if((*(it-1)) == "exit"){
                             textstream.str(std::string());
-                            textstream << "Have Fun!";
                             thread_running = false;
                             cursor.setColor(sf::Color::Black);
                             window.clear(sf::Color::Black); // clear the window with black color
-                            text.setString(textstream.str());
-                            cursor.setPosition(text.getLocalBounds().width, pos2.y);
+                            text.setPosition(5 + entry.getGlobalBounds().width, (h- 32));
+                            text.setString("Have Fun!");
+                            cursor.setPosition(5 + entry.getGlobalBounds().width + text.getLocalBounds().width, pos2.y);
+                            window.draw(entry);
                             window.draw(text);
                             window.draw(cursor);
                             window.display();
@@ -480,7 +481,7 @@ int main(){
                         textstream.str(std::string());
                         textstream.str(*it);
                     }
-                    cursor.setPosition(text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                 }
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
                     if(!(history.empty()) && it++ != (history.end() - 1)){
@@ -491,12 +492,12 @@ int main(){
                     else if(!(history.empty()) && it == history.end()){
                         it--;
                     }
-                    cursor.setPosition(text.getGlobalBounds().width, pos2.y);
+                    cursor.setPosition(cmd_size, pos2.y);
                 }
             }
         }
-        cursor.setPosition(text.getLocalBounds().width, pos2.y);
-        text.setPosition(entry.getGlobalBounds().width, (h- 32));
+        cursor.setPosition(cmd_size, pos2.y);
+        text.setPosition(5 + entry.getGlobalBounds().width, (h- 32));
         window.clear(sf::Color::Black); // clear the window with black color
         text.setString(textstream.str());
         window.draw(entry);
