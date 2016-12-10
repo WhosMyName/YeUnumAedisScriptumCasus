@@ -128,12 +128,11 @@ int main(){
     	   		
     	   		
     	   		}
-			}
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+  	            if(event.key.code == (sf::Keyboard::Space)){
                     textstream << " ";
                     cursor.setPosition(cmd_size, pos2.y);
-            }
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)){
+            	}
+                if(event.key.code == (sf::Keyboard::BackSpace)){
                     std::stringstream newss;
                     newss << textstream.str().substr(0, (textstream.str().length() - 1));
                     textstream.str(std::string());
@@ -141,7 +140,7 @@ int main(){
                     newss.str(std::string());
                     cursor.setPosition(cmd_size, pos2.y);
                 }     
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return)){
+                if(event.key.code ==(sf::Keyboard::Return)){
                     //print(textstream.str());
                     clean_insert(textstream.str());
                     textstream.str(std::string());
@@ -171,7 +170,7 @@ int main(){
                         }
                     }
                 }
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+                if(event.key.code == (sf::Keyboard::Up)){
                     if(!(history.empty()) && it != history.begin()){
                         if(clean_insert(textstream.str())){
                             it = it - 2;
@@ -184,7 +183,7 @@ int main(){
                     }
                     cursor.setPosition(cmd_size, pos2.y);
                 }
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+                if(event.key.code == (sf::Keyboard::Down)){
                     if(!(history.empty()) && it++ != (history.end() - 1)){
 
                         textstream.str(std::string());
@@ -195,6 +194,8 @@ int main(){
                     }
                     cursor.setPosition(cmd_size, pos2.y);
                 }
+			}
+
             
         }
         cursor.setPosition(cmd_size, pos2.y);
