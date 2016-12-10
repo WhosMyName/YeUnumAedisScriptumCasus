@@ -168,12 +168,11 @@ int main(){
     	   		else if(event.key.code >= 26 && event.key.code <= 35){
     	   			textstream << (char)(48 - 26 + event.key.code);
     	   		}
-			}
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+  	            if(event.key.code == (sf::Keyboard::Space)){
                     textstream << " ";
                     cursor.setPosition(cmd_size, pos2.y);
-            }
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)){
+            	}
+                if(event.key.code == (sf::Keyboard::BackSpace)){
                     std::stringstream newss;
                     newss << textstream.str().substr(0, (textstream.str().length() - 1));
                     textstream.str(std::string());
@@ -181,8 +180,9 @@ int main(){
                     newss.str(std::string());
                     cursor.setPosition(cmd_size, pos2.y);
                 }     
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Return)){
-                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+                if(event.key.code ==(sf::Keyboard::Return)){
+
                     clean_insert(textstream.str());
                     textstream.str(std::string());
                     cursor.setPosition(cmd_size, pos2.y);
@@ -210,7 +210,7 @@ int main(){
                         }
                     }
                 }
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+                if(event.key.code == (sf::Keyboard::Up)){
                     if(!(history.empty()) && it != history.begin()){
                         if(clean_insert(textstream.str())){
                             it = it - 2;
@@ -223,7 +223,7 @@ int main(){
                     }
                     cursor.setPosition(cmd_size, pos2.y);
                 }
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+                if(event.key.code == (sf::Keyboard::Down)){
                     if(!(history.empty()) && it++ != (history.end() - 1)){
                         textstream.str(std::string());
                         textstream.str(*it);
@@ -233,6 +233,7 @@ int main(){
                     }
                     cursor.setPosition(cmd_size, pos2.y);
                 }
+			}
         }
         text.setPosition(5 + entry.getGlobalBounds().width, (h - 32));
         window.clear(sf::Color::Black); // clear the window with black color
