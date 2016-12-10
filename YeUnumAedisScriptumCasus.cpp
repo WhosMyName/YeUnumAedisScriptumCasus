@@ -13,6 +13,7 @@ sf::RenderWindow window;
 sf::Event event;
 sf::Font font;
 sf::Text text;
+sf::Text output;
 sf::Text entry;
 sf::Text cursor;
 bool isWhite = false;
@@ -21,7 +22,7 @@ std::string fontfile = "hachicro.ttf" ;
 std::vector<std::string> history;
 std::vector<std::string>::iterator it = history.begin();
 std::stringstream textstream;
-
+std::stringstream outputStream;
 bool clean_insert(std::string in){
     if(!(std::find(history.begin(), history.end(), in) != history.end()) && !in.empty()){
         history.push_back(in);
@@ -60,7 +61,14 @@ void switch_context(std::string in){
 
     }
 }
+void print(std::string s){
+    outputStream << s;
 
+}
+void flush(){
+	outputStream.str(std::string());
+
+}
 int main(){
     /*---------------------Tips and Tracks-----------------------------------------------------------------\\
     //Use Booleans to mark a pressed key for smooth Movement-Systems or real-time Keyboard-Event
@@ -89,6 +97,11 @@ int main(){
         entry. setPosition(0, (h - 32));
         text.setPosition(entry.getCharacterSize(), (h - 32));
         cursor.setPosition(text.getGlobalBounds().width, (h - 32));
+        
+        output.setFont(font);
+        output.setCharacterSize(24);
+        output.setColor(sf::Color::White);
+        output.setPosition(output.getCharacterSize(), (h/2));
     }
     thread_running = true;
     std::thread thread(blinkCursor);// Creates Thread (C++11) and calls treadnochill
@@ -97,7 +110,6 @@ int main(){
         sf::Vector2f pos = text.getPosition();
         sf::Vector2f pos2 = cursor.getPosition();
         int cmd_size = (5 + entry.getGlobalBounds().width + text.getLocalBounds().width);
-        
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                 thread_running = false;
@@ -187,8 +199,10 @@ int main(){
         text.setPosition(5 + entry.getGlobalBounds().width, (h- 32));
         window.clear(sf::Color::Black); // clear the window with black color
         text.setString(textstream.str());
+        output.setString(outputStream.str());
         window.draw(entry);
         window.draw(text);
+        window.draw(output);
         window.draw(cursor);
         window.display();
     }
