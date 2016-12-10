@@ -99,11 +99,50 @@ void light(std::string obj){
 void roll(std::string obj){
 
 }
-void play(std::string obj){
 
+int candleStage = 0;
+void play(std::string obj){
+	if(obj == "candle" && isLight){
+		candleStage = 1;
+		print("You can produce the following\n shadow puppets: WOLF, ELK,\n EAGLE, SPIDER, GOOSE \n");
+	}
+	else if(obj == "eagle" && candleStage == 1 && isLight){
+		print("The light burns brighter.\n THIS WAS THE CORRECT CHOICE.\n");
+		candleStage++;	
+	}
+	else if(obj == "spider" && candleStage == 2 && isLight){
+		print("The light burns brighter.\n THIS WAS THE CORRECT CHOICE.\n");
+		candleStage++;	
+	}
+	else if(obj == "wolf" && candleStage == 3 && isLight){
+		print("As you play out the magic sequence,\n the room turns light and heat into a PORTAL.\n");
+		candleStage++;
+		portal = true;
+			
+	}
+	else if(obj == "candle" && isLight){
+		flush();
+		print("You can produce the following\n shadow puppets: WOLF, ELK,\n EAGLE, SPIDER, GOOSE \n");
+		print("The light flickers,\n the candle nearly extinguishes\n and then returns to burning normally.\n THIS WAS THE WRONG CHOICE.\n");
+		candleStage=1;
+	}
+	else if(obj == "candle"){
+		flush();
+		print("You play with your fingers,\n but nobody sees it!\n");
+	}
+	else{
+		flush();
+		print("You play around but NOTHING happens.\n");
+	}
 }
 void walk(std::string obj){
-
+	if(lvl == 2){
+	print("You try to walk.\n You trip.\n You fall.\nYou fall through the portal.\nYou find yourself surrounded by light.\nYou have come back.\n And it all comes back to you.");
+	lvl++;
+	}
+	else{
+		print("You trip. You fall.\n\n You realize that you are wearing\n roller blades.\n You cannot walk. You can only ROLL.");
+	}
 }
 void fall(std::string obj){
 
