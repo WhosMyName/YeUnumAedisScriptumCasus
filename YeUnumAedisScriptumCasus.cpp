@@ -21,10 +21,11 @@ bool thread_running = false;
 bool isLight = false;
 bool portal = false;
 bool has_scroll = true;
+bool matches = false;
 int lvl = 0;
 int delim;
 int candleStage = 0;
-std::string fontfile = "hachicro.ttf" ;
+std::string fontfile = "Welbut__.ttf" ;
 std::vector<std::string> history;
 std::vector<std::string>::iterator it = history.begin();
 std::stringstream textstream;
@@ -89,15 +90,16 @@ void read(std::string obj){
         if(obj == "scroll" ){
             flush();
             switch(lvl){
-                case 0:print("\"You might have lost the way and goal\nThe way to know is to see all whole\nTo grow in meaningful extent\nRead out the spell below's content\nWALK through the opening in spa\"\n\nThere is a SPELL attached to the scroll.");
-                case 1:print("\"You are a closer match to clarity\nLack of attention your only enemy\n\nPLAY with the shadow of the light\nRevive this tale when the time is right:\n\nThe freeest monarch of the wind pounced,\nat a double-quad-limbed creep,\nwhilst your best friend's ancestors sing.\"");
-                case 2:print("\"As the mind receives increase\nThoughts must expand\n\nFALL through the final phase\nTruth is not brought by your own hand\"\nThere is a SPELL attached to the scroll");
-                case 3:print("");
+                case 0:print("\"You might have lost the way and goal\nThe way to know is to see all whole\nTo grow in meaningful extent\nRead out the spell below's content\nWALK through the opening in spa\"\n\nThere is a SPELL attached to the scroll.");break;
+                case 1:print("\"You are a closer match to clarity\nLack of attention your only enemy\n\nPLAY with the shadow of the light\nRevive this tale when the time is right:\n\nThe freeest monarch of the wind pounced,\nat a double-quad-limbed creep,\nwhilst your best friend's ancestors sing.\""); break;
+                case 2:print("\"As the mind receives increase\nThoughts must expand\n\nFALL through the final phase\nTruth is not brought by your own hand\"\nThere is a SPELL attached to the scroll");break;
+                case 3:print("You can't read at all.");break;
             }
         }
         else if(obj == "spell"){
             flush();
             print("As you read out the magic spell,\na PORTAL made out of energy opens.");
+            portal = true;
         }
         else{
             flush();
@@ -112,19 +114,25 @@ void read(std::string obj){
     }
 }
 void light(std::string obj){
-    if(obj == "scroll"){
+    if(matches){
+        if(obj == "scroll"){
         flush();
         bool has_scroll = true;
         print("As the Scroll blazed into dust,\nyou realize that you just burned your only chance of Escape!\n gg wp");
-    }
-    else if(obj == "candle"){
-        flush();
+        }
+        else if(obj == "candle"){
+            flush();
+            isLight = true;
+            print("A faint light fills the room!");
+        }
+        else if(obj == "self"){
+        print("As your Entity is embraces by the warmth of the Flames,\nyou realize that you left Stove turned on at home!");
         isLight = true;
-        print("A faint light fills the room!");
+        }
     }
-    else if(obj == "self"){
-       print("As your Entity is embraces by the warmth of the Flames,\nyou realize that you left Stove turned on at home!");
-       isLight = true;
+    else{
+        flush();
+        print("How?");
     }
 }
 void roll(std::string obj){
@@ -134,6 +142,7 @@ void roll(std::string obj){
         portal = false;
         flush();
         print("As you roll through the Portal,\nyour Vision blurs\n and a slight breeze extinguishes the Flame of your Candle.");
+        help();
     }
     else if(obj == "portal" && !portal){
         flush();
@@ -141,7 +150,7 @@ void roll(std::string obj){
     }
     else{
         flush();
-        print("You roll around aimlessly.");
+        print("You roll around aimlessly.\n");
         std::this_thread::sleep_for(std::chrono::seconds(10));
         flush();
         print("You are tired of rolling around.\nMaybe you should focus on your tasks.");
@@ -184,11 +193,15 @@ void play(std::string obj){
 }
 void walk(std::string obj){
 	if(lvl == 2){
+    flush();
 	print("You try to walk.\n You trip.\n You fall.\nYou fall through the portal.\nYou find yourself surrounded by light.\nYou have come back.\n And it all comes back to you.");
 	lvl++;
+    help();
 	}
 	else{
-		print("You trip. You fall.\n\n You realize that you are wearing\n roller blades.\n You cannot walk. You can only ROLL.");
+        flush();
+		print("You trip. You fall.\n\n You realize that you are wearing\n roller blades.\n You cannot walk. You can only ROLL.\nBut you find some matches!\n");
+        matches = true;
 	}
 }
 void fall(){
@@ -240,7 +253,7 @@ int main(){
     int w = 1650;
     int h = 720;
     window.create(sf::VideoMode(w, h, 32), "Enter Title here!"); //Creates Window
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(30);
     if (!font.loadFromFile(fontfile)){ //Loads Font
     std::cout << "Could not Load font !" << std::endl;
     }
@@ -267,12 +280,12 @@ int main(){
     }
     thread_running = true;
     std::thread thread(blinkCursor);// Creates Thread (C++11) and calls blinkCursor
+    help();
     while (window.isOpen()){    // run the program as long as the window is open
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Vector2f pos = text.getPosition();
         sf::Vector2f pos2 = cursor.getPosition();
         int cmd_size = (5 + entry.getGlobalBounds().width + text.getLocalBounds().width);
-        help();
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                 thread_running = false;
