@@ -26,6 +26,7 @@ bool has_candle = false;
 bool roll_possible = false;
 int lvl = 0;
 int delim;
+int cmd_size;
 int candleStage = 0;
 std::string fontfile = "Welbut__.ttf" ;
 std::vector<std::string> history;
@@ -162,6 +163,10 @@ void roll(std::string obj){
         lvl++;
         isLight = false;
         portal = false;
+        inv.erase(std::find(inv.begin(), inv.end(), "candle"));
+        inv.erase(std::find(inv.begin(), inv.end(), "scroll"));
+        has_candle = false;
+        has_scroll = false;
         print("As you roll through the Portal,\nyour Vision blurs\n and a slight breeze extinguishes the Flame of your Candle.");
         intro();
     }
@@ -216,6 +221,10 @@ void walk(std::string obj){
 	if(lvl == 2){
 	print("You try to walk.\n You trip.\n You fall.\nYou fall through the portal.\nYou find yourself surrounded by light.\nYou have come back.\n And it all comes back to you.");
 	lvl++;
+    inv.erase(std::find(inv.begin(), inv.end(), "candle"));
+    inv.erase(std::find(inv.begin(), inv.end(), "scroll"));
+    has_candle = false;
+    has_scroll = false;
     intro();
 	}
 	else{
@@ -354,7 +363,7 @@ int main(){
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Vector2f pos = text.getPosition();
         sf::Vector2f pos2 = cursor.getPosition();
-        int cmd_size = (5 + entry.getGlobalBounds().width + text.getLocalBounds().width);
+        cmd_size = (5 + entry.getGlobalBounds().width + text.getLocalBounds().width);
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                 thread_running = false;
@@ -393,6 +402,8 @@ int main(){
                             if((*(historyit-1)) == "exit"){
                                 window.clear(sf::Color::Black); // clear the window with black color
                                 output.setString("You perform a triple Backflip through the 4th Wall and escape!");
+                                output.setOrigin(output.getGlobalBounds().width/2, output.getGlobalBounds().height/2);
+                                output.setPosition(w/2 , (h / 3));
                                 window.draw(output);
                                 cursor.setColor(sf::Color::Black);
                                 textstream.str(std::string());
@@ -450,6 +461,8 @@ int main(){
         text.setString(textstream.str());
         cursor.setPosition(cmd_size, pos2.y);
 	    output.setString(outputstream.str());
+        output.setOrigin(output.getGlobalBounds().width/2, output.getGlobalBounds().height/2);
+        output.setPosition(w/2 , (h / 3));
         window.draw(entry);
         window.draw(text);
         window.draw(output);
