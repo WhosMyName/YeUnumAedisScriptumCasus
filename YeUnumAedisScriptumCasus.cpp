@@ -27,24 +27,24 @@ int delim;
 int candleStage = 0;
 std::string fontfile = "Welbut__.ttf" ;
 std::vector<std::string> history;
-std::vector<std::string>::iterator it = history.begin();
+std::vector<std::string>::iterator historyit = history.begin();
+std::vector<std::string> inv;
+std::vector<std::string>::iterator invit = inv.begin();
 std::stringstream textstream;
 std::stringstream outputstream;
 
-bool dirty_insert(std::string in){// Special custom Insert Function to avoid Double Entrys
-    history.push_back(in);
-    it = history.end();
-    return true;
+std::vector<std::string>::iterator dirty_insert(std::string in, std::vector<std::string> * vec){// Special custom Insert Function to avoid Double Entrys
+    vec->push_back(in);
+    return vec->end();
 }
 
-bool clean_insert(std::string in){
-    if(!(std::find(history.begin(), history.end(), in) != history.end()) && !in.empty()){
-        history.push_back(in);
-        it = history.end();
-        return true;
+std::vector<std::string>::iterator clean_insert(std::string in, std::vector<std::string> * vec){
+    if(!(std::find(vec->begin(), vec->end(), in) != vec->end()) && !in.empty()){
+        vec->push_back(in);
+        return vec->end();
     }
     else{
-        return false;
+        return vec->begin();
     }
 }
 
@@ -74,9 +74,8 @@ void flush(){
     window.clear(sf::Color::Black); // clear the window with black color
 }
 
-void help(){
+void intro(){
     if(lvl == 0){
-        std::cout << "a" << std::endl;
         flush();
         print("You find yourself surrounded by darkness.\nYou feel a strong wind and tight shoes around your feet.\nThere is a CANDLE and a SCROLL in front of you.");
     }
@@ -92,6 +91,18 @@ void help(){
         flush();
         print("THANK YOU FOR PLAYING\nYE UNUM AEDIS SCRIPTUM CASUS!");
     }
+}
+
+void inventory(){
+    flush();
+    print("Your Inventory contains: \n");
+    for(invit = inv.begin(); invit != inv.end(); invit++){
+        print((*invit) + "\n");
+    }
+}
+
+void take(std::string obj){
+
 }
 
 void read(std::string obj){
@@ -152,7 +163,7 @@ void roll(std::string obj){
         portal = false;
         flush();
         print("As you roll through the Portal,\nyour Vision blurs\n and a slight breeze extinguishes the Flame of your Candle.");
-        help();
+        intro();
     }
     else if(obj == "portal" && !portal){
         flush();
@@ -203,7 +214,7 @@ void walk(std::string obj){
     flush();
 	print("You try to walk.\n You trip.\n You fall.\nYou fall through the portal.\nYou find yourself surrounded by light.\nYou have come back.\n And it all comes back to you.");
 	lvl++;
-    help();
+    intro();
 	}
 	else{
         flush();
@@ -244,11 +255,15 @@ void switch_context(std::string in){ //Main Function to Play
     else if(command == "fall"){
         fall();
     }
-    else if(command == "help"){
-        help();
+    else if(command == "intro"){
+        intro();
+    }
+    else if(command == "inventory"){
+        inventory();
     }
     else{
-        std::cout << "This is not a valid Option!\nNeed some help?" << std::endl;
+        flush();
+        print("This is not a valid Option!\nNeed some help?");
     }
 }
 
@@ -323,58 +338,59 @@ int main(){
                 }     
 
                 if(event.key.code == sf::Keyboard::Return){
-
-                    dirty_insert(textstream.str());
-                    textstream.str(std::string());
-                    cursor.setPosition(cmd_size, pos2.y);
-                    if(!history.empty()){
-                        if((*(it-1)) == "exit"){
-                            textstream.str(std::string());
-                            thread_running = false;
-                            cursor.setColor(sf::Color::Black);
-                            window.clear(sf::Color::Black); // clear the window with black color
-                            text.setPosition(5 + entry.getGlobalBounds().width, (h- 32));
-                            text.setString("Have Fun!");
-                            cursor.setPosition(5 + entry.getGlobalBounds().width + text.getLocalBounds().width, pos2.y);
-                            window.draw(entry);
-                            window.draw(text);
-                            window.draw(cursor);
-                            window.display();
-                            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-                            thread.join();
-                            window.clear(sf::Color::Black);
-                            window.close(); // "close requested" event: we close the window
-                            return 0;
-                        }
-                        else{
-                            switch_context((*(it-1)));
-                        }
+                    if(!textstream.str().empty()){
+                        historyit = dirty_insert(textstream.str(), &history);
+                        textstream.str(std::string());
+                        cursor.setPosition(cmd_size, pos2.y);
+                        if(!history.empty()){
+                            if((*(historyit-1)) == "exit"){
+                                textstream.str(std::string());
+                                thread_running = false;
+                                cursor.setColor(sf::Color::Black);
+                                window.clear(sf::Color::Black); // clear the window with black color
+                                text.setPosition(5 + entry.getGlobalBounds().width, (h- 32));
+                                text.setString("Have Fun!");
+                                cursor.setPosition(5 + entry.getGlobalBounds().width + text.getLocalBounds().width, pos2.y);
+                                window.draw(entry);
+                                window.draw(text);
+                                window.draw(cursor);
+                                window.display();
+                                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                                thread.join();
+                                window.clear(sf::Color::Black);
+                                window.close(); // "close requested" event: we close the window
+                                return 0;
+                            }
+                            else{
+                                switch_context((*(historyit-1)));
+                            }
+                        }    
                     }
                 }
-   
             }
+
             if(event.type == sf::Event::KeyPressed){
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-                    if(!(history.empty()) && it != history.begin()){
-                        if(clean_insert(textstream.str())){
-                            it = it - 2;
+                    if(!(history.empty()) && historyit != history.begin()){
+                        if(clean_insert(textstream.str(), &history) != history.begin()){
+                            historyit = historyit - 2;
                         }
                         else{
-                            it--;
+                            historyit--;
                         }
                         textstream.str(std::string());
-                        textstream.str(*it);
+                        textstream.str(*historyit);
                     }
                     cursor.setPosition(cmd_size, pos2.y);
                 }
 
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-                    if(!(history.empty()) && it++ != (history.end() - 1)){
+                    if(!(history.empty()) && historyit++ != (history.end() - 1)){
                         textstream.str(std::string());
-                        textstream.str(*it);
+                        textstream.str(*historyit);
                     }
-                    else if(!(history.empty()) && it == history.end()){
-                        it--;
+                    else if(!(history.empty()) && historyit == history.end()){
+                        historyit--;
                     }
                     cursor.setPosition(cmd_size, pos2.y);
                 }
