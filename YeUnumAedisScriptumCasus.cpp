@@ -31,7 +31,13 @@ std::vector<std::string>::iterator it = history.begin();
 std::stringstream textstream;
 std::stringstream outputstream;
 
-bool clean_insert(std::string in){// Special custom Insert Function to avoid Double Entrys
+bool dirty_insert(std::string in){// Special custom Insert Function to avoid Double Entrys
+    history.push_back(in);
+    it = history.end();
+    return true;
+}
+
+bool clean_insert(std::string in){
     if(!(std::find(history.begin(), history.end(), in) != history.end()) && !in.empty()){
         history.push_back(in);
         it = history.end();
@@ -61,13 +67,16 @@ void print(std::string printinput){
     outputstream << printinput;
 }
 
-
 void flush(){
 	outputstream.str(std::string());
+    output.setString(outputstream.str());
+    window.draw(output);
+    window.clear(sf::Color::Black); // clear the window with black color
 }
 
 void help(){
     if(lvl == 0){
+        std::cout << "a" << std::endl;
         flush();
         print("You find yourself surrounded by darkness.\nYou feel a strong wind and tight shoes around your feet.\nThere is a CANDLE and a SCROLL in front of you.");
     }
@@ -114,6 +123,7 @@ void read(std::string obj){
     }
 }
 void light(std::string obj){
+    flush();
     if(matches){
         if(obj == "scroll"){
         flush();
@@ -149,9 +159,6 @@ void roll(std::string obj){
         print("There's no Portal to roll into!\nWhat were you trying to achieve?");
     }
     else{
-        flush();
-        print("You roll around aimlessly.\n");
-        std::this_thread::sleep_for(std::chrono::seconds(10));
         flush();
         print("You are tired of rolling around.\nMaybe you should focus on your tasks.");
     }
@@ -317,7 +324,7 @@ int main(){
 
                 if(event.key.code == sf::Keyboard::Return){
 
-                    clean_insert(textstream.str());
+                    dirty_insert(textstream.str());
                     textstream.str(std::string());
                     cursor.setPosition(cmd_size, pos2.y);
                     if(!history.empty()){
@@ -344,8 +351,10 @@ int main(){
                         }
                     }
                 }
-
-                if(event.key.code == sf::Keyboard::Up){
+   
+            }
+            if(event.type == sf::Event::KeyPressed){
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
                     if(!(history.empty()) && it != history.begin()){
                         if(clean_insert(textstream.str())){
                             it = it - 2;
@@ -353,21 +362,22 @@ int main(){
                         else{
                             it--;
                         }
+                        textstream.str(std::string());
+                        textstream.str(*it);
                     }
+                    cursor.setPosition(cmd_size, pos2.y);
                 }
 
-                if(event.key.code == (sf::Keyboard::Down)){
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
                     if(!(history.empty()) && it++ != (history.end() - 1)){
                         textstream.str(std::string());
                         textstream.str(*it);
                     }
-                    else{
+                    else if(!(history.empty()) && it == history.end()){
                         it--;
                     }
-                    textstream.str(std::string());
-                    textstream.str(*it);
+                    cursor.setPosition(cmd_size, pos2.y);
                 }
-                cursor.setPosition(cmd_size, pos2.y);
             }
         }
         text.setPosition(5 + entry.getGlobalBounds().width, (h - 32));
