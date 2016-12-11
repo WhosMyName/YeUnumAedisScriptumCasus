@@ -20,8 +20,10 @@ bool isWhite = false;
 bool thread_running = false;
 bool isLight = false;
 bool portal = false;
-bool has_scroll = true;
-bool matches = false;
+bool has_scroll = false;
+bool has_matches = false;
+bool has_candle = false;
+bool roll_possible = false;
 int lvl = 0;
 int delim;
 int candleStage = 0;
@@ -63,10 +65,6 @@ void blinkCursor(){ //Let's the Cusor Blink
     }
 }
 
-void print(std::string printinput){
-    outputstream << printinput;
-}
-
 void flush(){
 	outputstream.str(std::string());
     output.setString(outputstream.str());
@@ -74,77 +72,80 @@ void flush(){
     window.clear(sf::Color::Black); // clear the window with black color
 }
 
+void print(std::string printinput){
+    flush();
+    outputstream << printinput;
+}
+
 void intro(){
     if(lvl == 0){
-        flush();
         print("You find yourself surrounded by darkness.\nYou feel a strong wind and tight shoes around your feet.\nThere is a CANDLE and a SCROLL in front of you.");
     }
     else if(lvl == 1){
-        flush();
         print("You find yourself surrounded by darkness.\nYou feel a mild breeze.\nThere is a CANDLE and a SCROLL in front of you.");
     }
     else if(lvl == 2){
-        flush();
         print("You find yourself surrounded by darkness.\nYou feel no movement of the air.\nThere is a CANDLE and a SCROLL in front of you.");
     }
     else if(lvl == 3){
-        flush();
         print("THANK YOU FOR PLAYING\nYE UNUM AEDIS SCRIPTUM CASUS!");
     }
 }
 
 void inventory(){
-    flush();
     print("Your Inventory contains: \n");
     for(invit = inv.begin(); invit != inv.end(); invit++){
         print((*invit) + "\n");
     }
 }
 
-void take(std::string obj){
-
-}
-
 void read(std::string obj){
     if(isLight){
         if(obj == "scroll" ){
-            flush();
-            switch(lvl){
-                case 0:print("\"You might have lost the way and goal\nThe way to know is to see all whole\nTo grow in meaningful extent\nRead out the spell below's content\nWALK through the opening in spa\"\n\nThere is a SPELL attached to the scroll.");break;
-                case 1:print("\"You are a closer match to clarity\nLack of attention your only enemy\n\nPLAY with the shadow of the light\nRevive this tale when the time is right:\n\nThe freeest monarch of the wind pounced,\nat a double-quad-limbed creep,\nwhilst your best friend's ancestors sing.\""); break;
-                case 2:print("\"As the mind receives increase\nThoughts must expand\n\nFALL through the final phase\nTruth is not brought by your own hand\"\nThere is a SPELL attached to the scroll");break;
-                case 3:print("You can't read at all.");break;
+            if(lvl == 0){
+                print("\"You might have lost the way and goal\nThe way to know is to see all whole\nTo grow in meaningful extent\nRead out the spell below's content\nWALK through the opening in spa\"\n\nThere is a SPELL attached to the scroll.");
+            }
+            else if(lvl == 1){
+                print("\"You are a closer match to clarity\nLack of attention your only enemy\n\nPLAY with the shadow of the light\nRevive this tale when the time is right:\n\nThe freeest monarch of the wind pounced,\nat a double-quad-limbed creep,\nwhilst your best friend's ancestors sing.\"");
+            }
+            else if(lvl == 2){
+                print("\"As the mind receives increase\nThoughts must expand\n\nFALL through the final phase\nTruth is not brought by your own hand\"\nThere is a SPELL attached to the scroll");
+            }
+            else if(lvl == 3){
+                print("You can't read at all.");
             }
         }
-        else if(obj == "spell"){
-            flush();
+        else if(obj == "spell" && lvl != 2){
             print("As you read out the magic spell,\na PORTAL made out of energy opens.");
             portal = true;
+            inv.erase(std::find(inv.begin(), inv.end(), obj));
         }
         else{
-            flush();
-            std::stringstream teemo;
-            teemo << "Reading " << obj << " doesn't seem to be a good Idea!" << std::endl;
-            print(teemo.str());
+            print("Reading " + obj + " doesn't seem to be a good Idea!");
         }
     }
     else{
-        flush();
         print("There is no Light! It's too dark to read.");
     }
 }
+
 void light(std::string obj){
-    flush();
-    if(matches){
-        if(obj == "scroll"){
-        flush();
-        bool has_scroll = true;
+    
+    if(has_matches){
+        if(obj == "scroll" && has_scroll){
+        has_scroll = false;
         print("As the Scroll blazed into dust,\nyou realize that you just burned your only chance of Escape!\n gg wp");
+        inv.erase(std::find(inv.begin(), inv.end(), obj));
         }
-        else if(obj == "candle"){
-            flush();
+        else if(obj == "scroll" && !has_scroll){
+            print("Maybe you are missing a part?");
+        }
+        else if(obj == "candle" && has_candle){
             isLight = true;
             print("A faint light fills the room!");
+        }
+        else if(obj == "candle" && !has_candle){
+            print("Maybe you are missing a part?");
         }
         else if(obj == "self"){
         print("As your Entity is embraces by the warmth of the Flames,\nyou realize that you left Stove turned on at home!");
@@ -152,82 +153,123 @@ void light(std::string obj){
         }
     }
     else{
-        flush();
         print("How?");
     }
 }
+
 void roll(std::string obj){
     if(obj == "portal" && portal){
         lvl++;
         isLight = false;
         portal = false;
-        flush();
         print("As you roll through the Portal,\nyour Vision blurs\n and a slight breeze extinguishes the Flame of your Candle.");
         intro();
     }
     else if(obj == "portal" && !portal){
-        flush();
         print("There's no Portal to roll into!\nWhat were you trying to achieve?");
     }
+    else if(obj == "candle" && has_candle){
+        print("There rolls your only hope of light.\nOh, wait you can't see because it's dark!");
+        has_candle = false;
+        isLight = false;
+        inv.erase(std::find(inv.begin(), inv.end(), obj));
+    }
     else{
-        flush();
         print("You are tired of rolling around.\nMaybe you should focus on your tasks.");
     }
 }
 
 void play(std::string obj){
-	if(obj == "candle" && isLight){
+	if(obj == "candle" && isLight && lvl == 1){
 		candleStage = 1;
 		print("You can produce the following\n shadow puppets: WOLF, ELK,\n EAGLE, SPIDER, GOOSE \n");
 	}
-	else if(obj == "eagle" && candleStage == 1 && isLight){
+	else if(obj == "eagle" && candleStage == 1 && isLight && lvl == 1){
 		print("The light burns brighter.\n THIS WAS THE CORRECT CHOICE.\n");
 		candleStage++;	
 	}
-	else if(obj == "spider" && candleStage == 2 && isLight){
+	else if(obj == "spider" && candleStage == 2 && isLight && lvl == 1){
 		print("The light burns brighter.\n THIS WAS THE CORRECT CHOICE.\n");
 		candleStage++;	
 	}
-	else if(obj == "wolf" && candleStage == 3 && isLight){
+	else if(obj == "wolf" && candleStage == 3 && isLight && lvl == 1){
 		print("As you play out the magic sequence,\n the room turns light and heat into a PORTAL.\n");
 		candleStage++;
 		portal = true;
-			
 	}
 	else if(obj == "candle" && isLight){
-		flush();
-		print("You can produce the following\n shadow puppets: WOLF, ELK,\n EAGLE, SPIDER, GOOSE \n");
 		print("The light flickers,\n the candle nearly extinguishes\n and then returns to burning normally.\n THIS WAS THE WRONG CHOICE.\n");
 		candleStage=1;
 	}
 	else if(obj == "candle"){
-		flush();
 		print("You play with your fingers,\n but nobody sees it!\n");
 	}
+    else if(obj == "self"){
+        print("Nice try, but you are not 12 Years old anymore!");
+    }
 	else{
-		flush();
 		print("You play around but NOTHING happens.\n");
 	}
 }
+
 void walk(std::string obj){
 	if(lvl == 2){
-    flush();
 	print("You try to walk.\n You trip.\n You fall.\nYou fall through the portal.\nYou find yourself surrounded by light.\nYou have come back.\n And it all comes back to you.");
 	lvl++;
     intro();
 	}
 	else{
-        flush();
+        roll_possible = true;
 		print("You trip. You fall.\n\n You realize that you are wearing\n roller blades.\n You cannot walk. You can only ROLL.\nBut you find some matches!\n");
-        matches = true;
 	}
 }
+
 void fall(){
-    flush();
     print("You do a 1080° Full-Frontal Node-Dive.");
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    flush();
     print("This actually hurts!");
+}
+
+void take(std::string obj){
+    if(obj == "matches" && !has_matches){
+        print("You picked up the " + obj + " and packed them into your pocket");
+        clean_insert(obj, &inv);
+        has_matches = true;
+    }
+    else if(obj == "matches" && has_matches){
+        print("You already have this Item");
+    }
+    else if(obj == "scroll" && !has_scroll){
+        print("You picked up the " + obj + " and packed it into your pocket");
+        clean_insert(obj, &inv);
+        has_scroll = true;
+    }
+    else if(obj == "scroll" && has_scroll){
+        print("You already have this Item");
+    }
+    else if(obj == "candle" && !has_candle){
+        print("You picked up the " + obj + " and packed it into your pocket");
+        clean_insert(obj, &inv);
+        has_candle = true;
+    }
+    else if(obj == "candle" && has_candle){
+        print("You already have this Item");
+    }
+    else if(obj == "self"){
+        fall();
+    }
+    else{
+        print("You can't take " + obj + "!");
+    }
+}
+
+void commands(){
+    if(!roll_possible){
+        print("Possible Commands are:\ntake\nwalk\nlight\nplay\nfall\nintro\nread\ninventory\ncommands");
+    }
+    else{
+        print("Possible Commands are:\ntake\nroll\nwalk\nlight\nplay\nfall\nintro\nread\ninventory\ncommands");
+    }
 }
 
 void switch_context(std::string in){ //Main Function to Play
@@ -240,7 +282,7 @@ void switch_context(std::string in){ //Main Function to Play
     if(command == "read"){
         read(obj);
     }
-    else if(command == "roll"){
+    else if(command == "roll" && roll_possible){
         roll(obj);
     }
     else if(command == "walk"){
@@ -252,6 +294,9 @@ void switch_context(std::string in){ //Main Function to Play
     else if(command == "play"){
         play(obj);
     }
+    else if(command == "take"){
+        take(obj);
+    }
     else if(command == "fall"){
         fall();
     }
@@ -261,9 +306,11 @@ void switch_context(std::string in){ //Main Function to Play
     else if(command == "inventory"){
         inventory();
     }
+    else if(command == "commands"){
+        commands();
+    }
     else{
-        flush();
-        print("This is not a valid Option!\nNeed some help?");
+        print("This is not a valid Option!\nNeed some help?\t Use \"commands\" !");
     }
 }
 
@@ -274,14 +321,14 @@ int main(){
     //-----------------------------------------------------------------------------------------------------*/
     int w = 1650;
     int h = 720;
-    window.create(sf::VideoMode(w, h, 32), "Enter Title here!"); //Creates Window
+    window.create(sf::VideoMode(w, h, 32), "Ye Unum Aedis Scriptum Casus"); //Creates Window
     window.setFramerateLimit(30);
     if (!font.loadFromFile(fontfile)){ //Loads Font
     std::cout << "Could not Load font !" << std::endl;
     }
     else{
         isWhite = true;
-        cursor.setString("[]");
+        cursor.setString("|");
         entry.setString(">");
         text.setFont(font);
         text.setCharacterSize(24); // in pixels, not points!
@@ -296,13 +343,13 @@ int main(){
         text.setPosition(entry.getCharacterSize(), (h - 32)); //Initial Text Position
         cursor.setPosition(text.getGlobalBounds().width, (h - 32));//Initial Cursor Position
 	    output.setFont(font);
-        output.setCharacterSize(18);
+        output.setCharacterSize(24);
         output.setColor(sf::Color::White);
         output.setPosition(0, (h/3));
     }
     thread_running = true;
     std::thread thread(blinkCursor);// Creates Thread (C++11) and calls blinkCursor
-    help();
+    intro();
     while (window.isOpen()){    // run the program as long as the window is open
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Vector2f pos = text.getPosition();
@@ -344,18 +391,20 @@ int main(){
                         cursor.setPosition(cmd_size, pos2.y);
                         if(!history.empty()){
                             if((*(historyit-1)) == "exit"){
+                                window.clear(sf::Color::Black); // clear the window with black color
+                                output.setString("You perform a triple Backflip through the 4th Wall and escape!");
+                                window.draw(output);
+                                cursor.setColor(sf::Color::Black);
                                 textstream.str(std::string());
                                 thread_running = false;
-                                cursor.setColor(sf::Color::Black);
-                                window.clear(sf::Color::Black); // clear the window with black color
-                                text.setPosition(5 + entry.getGlobalBounds().width, (h- 32));
+                                text.setPosition(5 + entry.getGlobalBounds().width, (h - 32));
                                 text.setString("Have Fun!");
                                 cursor.setPosition(5 + entry.getGlobalBounds().width + text.getLocalBounds().width, pos2.y);
                                 window.draw(entry);
                                 window.draw(text);
                                 window.draw(cursor);
                                 window.display();
-                                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                                std::this_thread::sleep_for(std::chrono::milliseconds(2500));
                                 thread.join();
                                 window.clear(sf::Color::Black);
                                 window.close(); // "close requested" event: we close the window
