@@ -28,6 +28,10 @@ int lvl = 0;
 int delim;
 int cmd_size;
 int candleStage = 0;
+int w = 1650;
+int h = 720;
+sf::Vector2f pos = text.getPosition();
+sf::Vector2f pos2 = cursor.getPosition();
 std::string fontfile = "Welbut__.ttf" ;
 std::vector<std::string> history;
 std::vector<std::string>::iterator historyit = history.begin();
@@ -66,6 +70,22 @@ void blinkCursor(){ //Let's the Cusor Blink
     }
 }
 
+void manual_clear(){
+    textstream.str(std::string());
+    text.setPosition(5 + entry.getGlobalBounds().width, (h - 32));
+    textstream.str(std::string());
+    cursor.setPosition(cmd_size, pos2.y);
+    output.setString(outputstream.str());
+    output.setOrigin(output.getGlobalBounds().width/2, output.getGlobalBounds().height/2);
+    window.clear(sf::Color::Black); // clear the window with black color
+    output.setPosition(w/2 , (h / 3));
+    window.draw(entry);
+    window.draw(text);
+    window.draw(output);
+    window.draw(cursor);
+    window.display();
+}
+
 void flush(){
 	outputstream.str(std::string());
     output.setString(outputstream.str());
@@ -89,7 +109,7 @@ void intro(){
         print("You find yourself surrounded by darkness.\nYou feel no movement of the air.\nThere is a CANDLE and a SCROLL in front of you.");
     }
     else if(lvl == 3){
-        print("THANK YOU FOR PLAYING\nYE UNUM AEDIS SCRIPTUM CASUS!");
+        print("THANK YOU FOR PLAYING\nYE UNUM AEDIS SCRIPTUM CASUS!\n\nHumble Credits go to:\nChuck K.\tJIT God of Coding and Merge-Master of Doom and Chaos\nIvan G.\tFor providing us with Ideas and a Story\nAlexander M.\t for Play-Testing and Tips\Chika N.\tfor creating all that bad Code");
     }
 }
 
@@ -131,8 +151,10 @@ void read(std::string obj){
 }
 
 void light(std::string obj){
-    
-    if(has_matches){
+    if(lvl == 3){
+        print("Why would you do this ?");
+    }    
+    else if(has_matches){
         if(obj == "scroll" && has_scroll){
         has_scroll = false;
         print("As the Scroll blazed into dust,\nyou realize that you just burned your only chance of Escape!\n gg wp");
@@ -158,8 +180,23 @@ void light(std::string obj){
     }
 }
 
+void fall(){
+    if(lvl == 2){
+        print("You throw yourself at the portal. You fall to the ground.\n\nNothing.\nNothing changed.\n\nIt is all the same.");
+    }
+    else{
+        print("You do a 1080 Degree Full-Frontal Nose-Dive.");
+        manual_clear();
+        std::this_thread::sleep_for(std::chrono::seconds(2)); 
+        print("This actually hurts!");
+    }
+}
+
 void roll(std::string obj){
-    if(obj == "portal" && portal){
+    if(lvl == 3){
+        print("Why would you do this ?");
+    }
+    else if(obj == "portal" && portal){
         lvl++;
         isLight = false;
         portal = false;
@@ -167,7 +204,9 @@ void roll(std::string obj){
         inv.erase(std::find(inv.begin(), inv.end(), "scroll"));
         has_candle = false;
         has_scroll = false;
-        print("As you roll through the Portal,\nyour Vision blurs\n and a slight breeze extinguishes the Flame of your Candle.");
+        print("As you roll through the Portal,\nyour Vision blurs\nand a slight breeze extinguishes the Flame of your Candle.\nYou feel like you have grown a litele.\nYour Pockets are not that heavy anymore.");
+        manual_clear();
+        std::this_thread::sleep_for(std::chrono::seconds(2)); 
         intro();
     }
     else if(obj == "portal" && !portal){
@@ -179,13 +218,26 @@ void roll(std::string obj){
         isLight = false;
         inv.erase(std::find(inv.begin(), inv.end(), obj));
     }
-    else{
+    else if (isLight){
+        print("Aimlessly you roll around.");
+        manual_clear();
+        std::this_thread::sleep_for(std::chrono::seconds(2));
         print("You are tired of rolling around.\nMaybe you should focus on your tasks.");
+        
+    }
+    else{
+        print("Aimlessly you roll around.");
+        manual_clear();
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        fall();
     }
 }
 
 void play(std::string obj){
-	if(obj == "candle" && isLight && lvl == 1){
+    if(lvl == 3){
+        print("Why would you do this ?");
+    }
+	else if(obj == "candle" && isLight && lvl == 1){
 		candleStage = 1;
 		print("You can produce the following\n shadow puppets: WOLF, ELK,\n EAGLE, SPIDER, GOOSE \n");
 	}
@@ -218,25 +270,31 @@ void play(std::string obj){
 }
 
 void walk(std::string obj){
-	if(lvl == 2){
+    if(lvl == 3){
+        print("Why would you do this ?");
+    }
+	else if(lvl == 2){
 	print("You try to walk.\n You trip.\n You fall.\nYou fall through the portal.\nYou find yourself surrounded by light.\nYou have come back.\n And it all comes back to you.");
 	lvl++;
-    inv.erase(std::find(inv.begin(), inv.end(), "candle"));
-    inv.erase(std::find(inv.begin(), inv.end(), "scroll"));
-    has_candle = false;
-    has_scroll = false;
+    if(has_candle){
+        inv.erase(std::find(inv.begin(), inv.end(), "candle"));
+        has_candle = false;
+    }
+    if(has_scroll){
+        inv.erase(std::find(inv.begin(), inv.end(), "scroll"));
+        has_scroll = false;
+    }    
     intro();
 	}
 	else{
         roll_possible = true;
-		print("You trip. You fall.\n\n You realize that you are wearing\n roller blades.\n You cannot walk. You can only ROLL.\nBut you find some matches!\n");
+        if(!has_matches){
+		    print("You trip. You fall.\n\n You realize that you are wearing\n roller blades.\n You cannot walk. You can only ROLL.\nBut you find some matches!\n");
+        }
+        else{
+            print("You trip. You fall.\n\n You realize that you are wearing\n roller blades.\n You cannot walk. You can only ROLL.");
+        }
 	}
-}
-
-void fall(){
-    print("You do a 1080° Full-Frontal Node-Dive.");
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    print("This actually hurts!");
 }
 
 void take(std::string obj){
@@ -278,6 +336,9 @@ void commands(){
     }
     else{
         print("Possible Commands are:\ntake\nroll\nwalk\nlight\nplay\nfall\nintro\nread\ninventory\ncommands");
+    }
+    if(lvl == 3){
+        print("Possible Commands are:\nexit\ntake\nroll\nwalk\nlight\nplay\nfall\nintro\nread\ninventory\ncommands");
     }
 }
 
@@ -328,8 +389,6 @@ int main(){
     //Use Booleans to mark a pressed key for smooth Movement-Systems or real-time Keyboard-Event
     //
     //-----------------------------------------------------------------------------------------------------*/
-    int w = 1650;
-    int h = 720;
     window.create(sf::VideoMode(w, h, 32), "Ye Unum Aedis Scriptum Casus"); //Creates Window
     window.setFramerateLimit(30);
     if (!font.loadFromFile(fontfile)){ //Loads Font
@@ -361,8 +420,8 @@ int main(){
     intro();
     while (window.isOpen()){    // run the program as long as the window is open
         // check all the window's events that were triggered since the last iteration of the loop
-        sf::Vector2f pos = text.getPosition();
-        sf::Vector2f pos2 = cursor.getPosition();
+        pos = text.getPosition();
+        pos2 = cursor.getPosition();
         cmd_size = (5 + entry.getGlobalBounds().width + text.getLocalBounds().width);
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
